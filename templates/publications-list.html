@@ -1,0 +1,10 @@
+{% extends "_base.html" %}
+
+{% block content %}
+ <h1>Lista de blog's</h1>
+  {% for post in post_list %}
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.author }}</p>
+    
+  {% endfor %}
+{% endblock content %}
