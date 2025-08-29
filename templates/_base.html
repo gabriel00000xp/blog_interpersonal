@@ -12,9 +12,12 @@
 </head>
 <body>
   <header>
-    <h1>{% block header %}este es mi proyecto de fin de curso{% endblock %}</h1>
+    <h1>{% block header %}este es mi proyecto de fin de curso  |  
+      <a href="{% url 'blog:post_list' %}">Volver a la lista</a> | <a href="{% url 'blog:publication_create' %}">Crear nueva publicación</a>
+      {% endblock %}</h1>
   </header>
         {% block content %}
+        
         {% endblock content %}
 </body>
 </html>
