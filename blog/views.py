@@ -1,10 +1,10 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView , UpdateView , DeleteView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .models import Post
 from .forms import CommentForm, PublicationForm
 from django.shortcuts import redirect
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class PostListView(ListView):
     model = Post
@@ -35,4 +35,19 @@ class PublicationCreateView(CreateView):
     model = Post
     form_class = PublicationForm
     template_name = "publication-create.html"
+    success_url = reverse_lazy("blog:post_list")
+
+class PublicationUpdateView(UpdateView):
+    model = Post
+    form_class = PublicationForm
+    template_name = "publication-update.html"
+    context_object_name = "publication"
+
+    def get_success_url(self):
+        return reverse_lazy("blog:post_detail", kwargs={"pk": self.object.pk})
+
+class PublicationDeleteView(DeleteView):
+    model = Post
+    template_name = "publication-delete.html"
+    context_object_name = "publication"
     success_url = reverse_lazy("blog:post_list")
