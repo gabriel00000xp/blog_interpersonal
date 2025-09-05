@@ -13,7 +13,7 @@
 <body>
   <header>
   <h1>{% block header %}este es mi proyecto de fin de curso{% endblock header %}</h1>
-  <a href="{% url 'blog:post_list' %}">Volver a la lista</a> | <a href="{% url 'blog:publication_create' %}">Crear nueva publicación</a> | <a href="{% url 'blog:login' %}">Iniciar sesión</a> 
+  <a href="{% url 'blog:post_list' %}">Volver a la lista</a> | <a href="{% url 'blog:publication_create' %}">Crear nueva publicación</a> |
 
 {% if user.is_authenticated %}
   <p>Bienvenido, {{ user.username }}!</p>
@@ -22,6 +22,10 @@
     <button type="submit">Cerrar sesión</button>
   </form>
 
+
+{% else %}
+
+    <a href="{% url 'blog:login' %}">Iniciar sesión</a> 
 {% endif %}
   </header>
         {% block content %}
