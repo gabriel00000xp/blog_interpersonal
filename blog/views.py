@@ -4,16 +4,20 @@ from django.urls import reverse_lazy
 from .models import Post
 from .forms import CommentForm, PublicationForm
 from django.shortcuts import redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 
-class PostListView(ListView):
+class PostListView(ListView , LoginRequiredMixin):
     model = Post
     template_name = "publications-list.html"
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Post
     template_name = "detail_list.html"
     context_object_name = "post"
+
+    def test_func(self):
+        # Solo permite comentar si el usuario está autenticado y es staff
+        return self.request.user.is_authenticated and self.request.user.is_staff
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -26,28 +30,31 @@ class PostDetailView(DetailView):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = self.object
+            comment.author = request.user  # <-- asigna el usuario autenticado
             comment.save()
             return redirect('blog:post_detail', pk=self.object.pk)
         context = self.get_context_data(form=form)
         return self.render_to_response(context)
 
-class PublicationCreateView(CreateView):
+class PublicationCreateView(CreateView , LoginRequiredMixin):
     model = Post
     form_class = PublicationForm
     template_name = "publication-create.html"
     success_url = reverse_lazy("blog:post_list")
 
-class PublicationUpdateView(UpdateView):
+class PublicationUpdateView(UpdateView , LoginRequiredMixin):
     model = Post
     form_class = PublicationForm
     template_name = "publication-update.html"
     context_object_name = "publication"
-
+    
     def get_success_url(self):
-        return reverse_lazy("blog:post_detail", kwargs={"pk": self.object.pk})
-
+            return reverse_lazy("blog:post_detail", kwargs={"pk": self.object.pk})
+    
 class PublicationDeleteView(DeleteView):
     model = Post
     template_name = "publication-delete.html"
     context_object_name = "publication"
     success_url = reverse_lazy("blog:post_list")
+
+LOGIN_REDIRECT_URL = 'blog:publication_list'

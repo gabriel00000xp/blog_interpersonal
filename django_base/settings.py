@@ -125,4 +125,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-LOGIN_REDIRECT_URL = 'blog:publication_list'
+LOGIN_REDIRECT_URL = 'blog:post_list'

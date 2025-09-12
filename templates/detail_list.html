@@ -4,8 +4,10 @@
   <h1>{{ post.title }}</h1>
   <p>{{ post.content }}</p>
   <p>Author: {{ post.author }}</p>
-  <p>Published on: {{ post.created_at }}</p>
+{% if user == post.author %}
   <a href="{% url 'blog:post_update' post.pk %}">Editar publicación</a> | <a href="{% url 'blog:post_delete' post.pk %}">Eliminar publicación</a>
+{% endif %}
+  <hr>
   <p>Comentarios:</p>
   <ul>
     {% for comment in post.comments.all %}
